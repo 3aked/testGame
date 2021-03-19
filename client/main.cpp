@@ -1,37 +1,31 @@
-#include <iostream>
-
 #include "data.h"
 #include "errors.h"
+#include <iostream>
 
-#include <QCoreApplication>
-#include <QWebSocket>
+#include "client.h"
+#include "game.h"
 
+#include "mainwindow.h"
+#include <QApplication>
 #include <QDebug>
 
-int main(int argc, char* argv[]) {
-    std::cout << "client" << std::endl;
-    QCoreApplication app(argc, argv);
+int main(int argc, char *argv[]) {
+  std::cout << "client" << std::endl;
+  QApplication app(argc, argv);
 
-    QWebSocket socket;
+//  Client client("akad", Client::default_host, Client::default_port);
 
-    QObject::connect(&socket, &QWebSocket::connected, [&] {
-        InitializationData d;
-        d.m_name = "akad";
-        d.m_autoplay = true;
+//  QObject::connect(
+//      &client, &Client::gameCreated, &app, [&](std::shared_ptr<Game> game) {
+//        qDebug() << "game created";
+//        QObject::connect(game.get(), &Game::updated, &app, [&] {
+//          qDebug() << (int)(game->state()) << (int)(game->lastCompare());
+//        });
+//      });
 
-        socket.sendTextMessage(d.toJsonString());
-    });
+//  client.createGame(true);
 
-    QObject::connect(&socket, &QWebSocket::textMessageReceived,
-                     [&](const QString& str) {
-                         qDebug().noquote() << str;
-                     });
-
-    QObject::connect(
-        &socket, qOverload<QAbstractSocket::SocketError>(&QWebSocket::error),
-        [&] { qDebug().noquote() << socket.errorString(); });
-
-    socket.open(QUrl::fromUserInput("ws://localhost:4242"));
-
-    return app.exec();
+  MainWindow w;
+  w.show();
+  return app.exec();
 }

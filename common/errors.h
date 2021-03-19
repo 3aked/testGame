@@ -5,25 +5,22 @@
 
 #include <QString>
 
-enum class EError { BadDataRequest = 0 };
+enum class EError { BadData = 0, NetworkError };
 
-class Error : public Data, public std::exception {
+class ErrorData : public Data {
 public:
-    Error(EError error, const QString& desc = "");
-    Error(const QJsonObject& json);
+  ErrorData(EError error, const QString &desc = "");
+  ErrorData(const QJsonObject &json);
 
-    QString errorString() const;
+  QString errorString() const;
 
-    EError m_error;
+  EError m_error;
 
-    QString m_desc;
+  QString m_desc;
 
-    // std::exception interface
-    const char* what() const noexcept;
-
-    // Data interface
-    QJsonObject toJson() const override;
-    EDataType type() const override { return ServerError; }
+  // Data interface
+  QJsonObject toJson() const override;
+  EDataType type() const override { return Error; }
 };
 
 #endif // ERRORS_H
